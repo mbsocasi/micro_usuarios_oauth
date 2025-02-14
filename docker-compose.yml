@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  usuarios-app:
+    build: .
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    depends_on:
+      - usuarios-db
+    networks:
+      - usuarios-network
+
+  usuarios-db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - usuarios_data:/var/lib/mysql
+    networks:
+      - usuarios-network
+
+volumes:
+  usuarios_data:
+
+networks:
+  usuarios-network:
+    driver: bridge 
